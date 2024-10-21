@@ -2,19 +2,22 @@
 using Microsoft.AspNetCore.Mvc;
 using Fall2024_Assignment3_cchall5.Models;
 
-namespace Fall2024_Assignment3_cchall5.Controllers;
+namespace ClassDemo.Controllers;
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly IConfiguration _config;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, IConfiguration config)
     {
         _logger = logger;
+        _config = config;
     }
 
     public IActionResult Index()
     {
+        //string secret = _config["OpenAI:Secret"] ?? throw new Exception("OpenAI:Secret does not exist in the current Configuration");
         return View();
     }
 
@@ -29,4 +32,3 @@ public class HomeController : Controller
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }
-
