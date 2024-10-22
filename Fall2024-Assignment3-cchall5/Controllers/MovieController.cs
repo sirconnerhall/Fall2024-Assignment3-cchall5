@@ -54,10 +54,17 @@ namespace Fall2024_Assignment3_cchall5.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,ImdbLink,Genre,ReleaseYear,MoviePhoto")] Movie movie)
+        public async Task<IActionResult> Create([Bind("Id,Title,ImdbLink,Genre,ReleaseYear")] Movie movie, IFormFile? photo)
         {
             if (ModelState.IsValid)
             {
+                if (photo != null && photo.Length > 0)
+                {
+                    using var memoryStream = new MemoryStream();
+                    photo.CopyTo(memoryStream);
+                    movie.MoviePhoto = memoryStream.ToArray();
+                }
+
                 _context.Add(movie);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
