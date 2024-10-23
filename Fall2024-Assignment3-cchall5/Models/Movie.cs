@@ -9,18 +9,18 @@ namespace Fall2024_Assignment3_cchall5.Models
 
         [Required]
         [StringLength(100)]
-        public string Title { get; set; }
+        public required string Title { get; set; }
 
         [Required]
         [Url]
-        public string ImdbLink { get; set; }
+        public required string ImdbLink { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string Genre { get; set; }
+        public required string Genre { get; set; }
 
         [Required]
-        public int ReleaseYear { get; set; }
+        public required int ReleaseYear { get; set; }
 
         // photo is not required
         public byte[]? MoviePhoto { get; set; }

@@ -10,35 +10,42 @@
     <h4>Actor</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Gender)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Gender)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Age)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Age)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ImdbLink)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ImdbLink)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ActorPhoto)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ActorPhoto)
+        <dd class="col-sm-10">
+            @if (Model.ActorPhoto != null && Model.ActorPhoto.Length > 0)
+            {
+                <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.ActorPhoto)" alt="Actor Photo" style="width:200px;height:auto;" />
+            }
+            else
+            {
+                <p>No photo available</p>
+            }
         </dd>
     </dl>
 </div>

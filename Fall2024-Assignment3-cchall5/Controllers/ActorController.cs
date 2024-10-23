@@ -64,7 +64,6 @@ namespace Fall2024_Assignment3_cchall5.Controllers
                     photo.CopyTo(memoryStream);
                     actor.ActorPhoto = memoryStream.ToArray();
                 }
-                Console.WriteLine("Actor is being created.");
                 _context.Add(actor);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -93,7 +92,7 @@ namespace Fall2024_Assignment3_cchall5.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Gender,Age,ImdbLink,ActorPhoto")] Actor actor)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Gender,Age,ImdbLink,ActorPhoto")] Actor actor, IFormFile? photo)
         {
             if (id != actor.Id)
             {
@@ -104,6 +103,22 @@ namespace Fall2024_Assignment3_cchall5.Controllers
             {
                 try
                 {
+                    var existingActor = await _context.Actor.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
+
+                    if (existingActor == null)
+                    {
+                        return NotFound();
+                    }
+                    if (photo != null && photo.Length > 0)
+                    {
+                        using var memoryStream = new MemoryStream();
+                        await photo.CopyToAsync(memoryStream);
+                        actor.ActorPhoto = memoryStream.ToArray();
+                    }
+                    else
+                    {
+                        actor.ActorPhoto = existingActor.ActorPhoto;
+                    }
                     _context.Update(actor);
                     await _context.SaveChangesAsync();
                 }

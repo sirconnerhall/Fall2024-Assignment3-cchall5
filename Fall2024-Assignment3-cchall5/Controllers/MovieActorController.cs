@@ -102,7 +102,7 @@ namespace Fall2024_Assignment3_cchall5.Controllers
 
             if (ModelState.IsValid && !alreadyExists)
             {
-                _context.Add(movieActor);
+                _context.Update(movieActor);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
