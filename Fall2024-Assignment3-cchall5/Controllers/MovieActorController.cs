@@ -48,9 +48,9 @@ namespace Fall2024_Assignment3_cchall5.Controllers
 
         // GET: MovieActor/Create
         public IActionResult Create()
-        {
-            ViewData["ActorId"] = new SelectList(_context.Actor, "Id", "Gender");
-            ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Genre");
+        {   
+            ViewData["ActorId"] = new SelectList(_context.Actor, "Id", "Name");
+            ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Title");
             return View();
         }
 
@@ -67,8 +67,8 @@ namespace Fall2024_Assignment3_cchall5.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ActorId"] = new SelectList(_context.Actor, "Id", "Gender", movieActor.ActorId);
-            ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Genre", movieActor.MovieId);
+            ViewData["ActorId"] = new SelectList(_context.Actor, "Id", "Name", movieActor.ActorId);
+            ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Title", movieActor.MovieId);
             return View(movieActor);
         }
 
@@ -85,8 +85,8 @@ namespace Fall2024_Assignment3_cchall5.Controllers
             {
                 return NotFound();
             }
-            ViewData["ActorId"] = new SelectList(_context.Actor, "Id", "Gender", movieActor.ActorId);
-            ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Genre", movieActor.MovieId);
+            ViewData["ActorId"] = new SelectList(_context.Actor, "Id", "Name", movieActor.ActorId);
+            ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Title", movieActor.MovieId);
             return View(movieActor);
         }
 
@@ -97,33 +97,17 @@ namespace Fall2024_Assignment3_cchall5.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,ActorId,MovieId")] MovieActor movieActor)
         {
-            if (id != movieActor.Id)
-            {
-                return NotFound();
-            }
+            bool alreadyExists = await _context.MovieActor
+                .AnyAsync(ma => ma.ActorId == movieActor.ActorId && ma.MovieId == movieActor.MovieId);
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && !alreadyExists)
             {
-                try
-                {
-                    _context.Update(movieActor);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MovieActorExists(movieActor.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _context.Add(movieActor);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ActorId"] = new SelectList(_context.Actor, "Id", "Gender", movieActor.ActorId);
-            ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Genre", movieActor.MovieId);
+            ViewData["ActorId"] = new SelectList(_context.Actor, "Id", "Name", movieActor.ActorId);
+            ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Title", movieActor.MovieId);
             return View(movieActor);
         }
 

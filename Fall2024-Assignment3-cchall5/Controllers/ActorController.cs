@@ -60,8 +60,6 @@ namespace Fall2024_Assignment3_cchall5.Controllers
             {
                 if (photo != null && photo.Length > 0)
                 {
-                    //throw new InvalidOperationException("FIle is being uploaded");
-                    //Console.WriteLine($"File uploaded: {photo.FileName}, size: {photo.Length} bytes");
                     using var memoryStream = new MemoryStream();
                     photo.CopyTo(memoryStream);
                     actor.ActorPhoto = memoryStream.ToArray();
