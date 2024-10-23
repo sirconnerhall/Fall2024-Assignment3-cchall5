@@ -17,7 +17,7 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        //string secret = _config["OpenAI:Secret"] ?? throw new Exception("OpenAI:Secret does not exist in the current Configuration");
+        string secret = _config["OpenAI:Secret"] ?? throw new Exception("OpenAI:Secret does not exist in the current Configuration");
         return View();
     }
 

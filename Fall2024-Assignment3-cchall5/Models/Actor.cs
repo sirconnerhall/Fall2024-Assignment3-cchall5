@@ -26,7 +26,7 @@ namespace Fall2024_Assignment3_cchall5.Models
         // photo is not required
         public byte[]? ActorPhoto { get; set; }
 
-        public List<MovieActor> MovieActors { get; set; }
+        public List<MovieActor> MovieActors { get; set; } = new List<MovieActor>();
 
     }
 

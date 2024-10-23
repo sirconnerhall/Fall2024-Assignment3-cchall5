@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fall2024_Assignment3_cchall5.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241022191829_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20241022210815_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,7 +53,7 @@ namespace Fall2024_Assignment3_cchall5.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Student");
+                    b.ToTable("Actor");
                 });
 
             modelBuilder.Entity("Fall2024_Assignment3_cchall5.Models.Movie", b =>
@@ -86,7 +86,7 @@ namespace Fall2024_Assignment3_cchall5.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Course");
+                    b.ToTable("Movie");
                 });
 
             modelBuilder.Entity("Fall2024_Assignment3_cchall5.Models.MovieActor", b =>
@@ -109,7 +109,7 @@ namespace Fall2024_Assignment3_cchall5.Migrations
 
                     b.HasIndex("MovieId");
 
-                    b.ToTable("CourseStudent");
+                    b.ToTable("MovieActor");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

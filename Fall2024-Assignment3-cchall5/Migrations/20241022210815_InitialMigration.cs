@@ -6,11 +6,28 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Fall2024_Assignment3_cchall5.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Actor",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Age = table.Column<int>(type: "int", nullable: false),
+                    ImdbLink = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ActorPhoto = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Actor", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -51,7 +68,7 @@ namespace Fall2024_Assignment3_cchall5.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Course",
+                name: "Movie",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -64,24 +81,7 @@ namespace Fall2024_Assignment3_cchall5.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Course", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Student",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Age = table.Column<int>(type: "int", nullable: false),
-                    ImdbLink = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ActorPhoto = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Student", x => x.Id);
+                    table.PrimaryKey("PK_Movie", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -191,7 +191,7 @@ namespace Fall2024_Assignment3_cchall5.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CourseStudent",
+                name: "MovieActor",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -201,17 +201,17 @@ namespace Fall2024_Assignment3_cchall5.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CourseStudent", x => x.Id);
+                    table.PrimaryKey("PK_MovieActor", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CourseStudent_Course_MovieId",
-                        column: x => x.MovieId,
-                        principalTable: "Course",
+                        name: "FK_MovieActor_Actor_ActorId",
+                        column: x => x.ActorId,
+                        principalTable: "Actor",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CourseStudent_Student_ActorId",
-                        column: x => x.ActorId,
-                        principalTable: "Student",
+                        name: "FK_MovieActor_Movie_MovieId",
+                        column: x => x.MovieId,
+                        principalTable: "Movie",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -256,13 +256,13 @@ namespace Fall2024_Assignment3_cchall5.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CourseStudent_ActorId",
-                table: "CourseStudent",
+                name: "IX_MovieActor_ActorId",
+                table: "MovieActor",
                 column: "ActorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CourseStudent_MovieId",
-                table: "CourseStudent",
+                name: "IX_MovieActor_MovieId",
+                table: "MovieActor",
                 column: "MovieId");
         }
 
@@ -285,7 +285,7 @@ namespace Fall2024_Assignment3_cchall5.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "CourseStudent");
+                name: "MovieActor");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -294,10 +294,10 @@ namespace Fall2024_Assignment3_cchall5.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Course");
+                name: "Actor");
 
             migrationBuilder.DropTable(
-                name: "Student");
+                name: "Movie");
         }
     }
 }

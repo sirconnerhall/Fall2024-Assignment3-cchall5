@@ -22,7 +22,7 @@ namespace Fall2024_Assignment3_cchall5.Controllers
         // GET: Movie
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Course.ToListAsync());
+            return View(await _context.Movie.ToListAsync());
         }
 
         // GET: Movie/Details/5
@@ -33,7 +33,7 @@ namespace Fall2024_Assignment3_cchall5.Controllers
                 return NotFound();
             }
 
-            var movie = await _context.Course
+            var movie = await _context.Movie
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (movie == null)
             {
@@ -80,7 +80,7 @@ namespace Fall2024_Assignment3_cchall5.Controllers
                 return NotFound();
             }
 
-            var movie = await _context.Course.FindAsync(id);
+            var movie = await _context.Movie.FindAsync(id);
             if (movie == null)
             {
                 return NotFound();
@@ -131,7 +131,7 @@ namespace Fall2024_Assignment3_cchall5.Controllers
                 return NotFound();
             }
 
-            var movie = await _context.Course
+            var movie = await _context.Movie
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (movie == null)
             {
@@ -146,10 +146,10 @@ namespace Fall2024_Assignment3_cchall5.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var movie = await _context.Course.FindAsync(id);
+            var movie = await _context.Movie.FindAsync(id);
             if (movie != null)
             {
-                _context.Course.Remove(movie);
+                _context.Movie.Remove(movie);
             }
 
             await _context.SaveChangesAsync();
@@ -158,7 +158,7 @@ namespace Fall2024_Assignment3_cchall5.Controllers
 
         private bool MovieExists(int id)
         {
-            return _context.Course.Any(e => e.Id == id);
+            return _context.Movie.Any(e => e.Id == id);
         }
     }
 }

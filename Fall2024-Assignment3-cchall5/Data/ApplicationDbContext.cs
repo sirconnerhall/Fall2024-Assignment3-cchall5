@@ -11,9 +11,9 @@ public class ApplicationDbContext : IdentityDbContext
     {
     }
 
-    public DbSet<Fall2024_Assignment3_cchall5.Models.Actor> Student { get; set; } = default!;
+    public DbSet<Fall2024_Assignment3_cchall5.Models.Actor> Actor { get; set; } = default!;
 
-    public DbSet<Fall2024_Assignment3_cchall5.Models.Movie> Course { get; set; } = default!;
+    public DbSet<Fall2024_Assignment3_cchall5.Models.Movie> Movie { get; set; } = default!;
 
-    public DbSet<Fall2024_Assignment3_cchall5.Models.MovieActor> CourseStudent { get; set; } = default!;
+    public DbSet<Fall2024_Assignment3_cchall5.Models.MovieActor> MovieActor { get; set; } = default!;
 }

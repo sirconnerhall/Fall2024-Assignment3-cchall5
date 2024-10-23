@@ -22,7 +22,7 @@ namespace Fall2024_Assignment3_cchall5.Controllers
         // GET: Actor
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Student.ToListAsync());
+            return View(await _context.Actor.ToListAsync());
         }
 
         // GET: Actor/Details/5
@@ -33,7 +33,7 @@ namespace Fall2024_Assignment3_cchall5.Controllers
                 return NotFound();
             }
 
-            var actor = await _context.Student
+            var actor = await _context.Actor
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (actor == null)
             {
@@ -60,11 +60,13 @@ namespace Fall2024_Assignment3_cchall5.Controllers
             {
                 if (photo != null && photo.Length > 0)
                 {
+                    //throw new InvalidOperationException("FIle is being uploaded");
+                    //Console.WriteLine($"File uploaded: {photo.FileName}, size: {photo.Length} bytes");
                     using var memoryStream = new MemoryStream();
                     photo.CopyTo(memoryStream);
                     actor.ActorPhoto = memoryStream.ToArray();
                 }
-
+                Console.WriteLine("Actor is being created.");
                 _context.Add(actor);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -80,7 +82,7 @@ namespace Fall2024_Assignment3_cchall5.Controllers
                 return NotFound();
             }
 
-            var actor = await _context.Student.FindAsync(id);
+            var actor = await _context.Actor.FindAsync(id);
             if (actor == null)
             {
                 return NotFound();
@@ -131,7 +133,7 @@ namespace Fall2024_Assignment3_cchall5.Controllers
                 return NotFound();
             }
 
-            var actor = await _context.Student
+            var actor = await _context.Actor
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (actor == null)
             {
@@ -146,10 +148,10 @@ namespace Fall2024_Assignment3_cchall5.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var actor = await _context.Student.FindAsync(id);
+            var actor = await _context.Actor.FindAsync(id);
             if (actor != null)
             {
-                _context.Student.Remove(actor);
+                _context.Actor.Remove(actor);
             }
 
             await _context.SaveChangesAsync();
@@ -158,7 +160,7 @@ namespace Fall2024_Assignment3_cchall5.Controllers
 
         private bool ActorExists(int id)
         {
-            return _context.Student.Any(e => e.Id == id);
+            return _context.Actor.Any(e => e.Id == id);
         }
     }
 }

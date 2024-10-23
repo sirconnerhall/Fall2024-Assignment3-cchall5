@@ -46,7 +46,14 @@
                 @Html.DisplayFor(modelItem => item.ImdbLink)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ActorPhoto)
+                @if (item.ActorPhoto != null && item.ActorPhoto.Length > 0)
+                {
+                    <img src="data:image/jpg;base64,@Convert.ToBase64String(item.ActorPhoto)" alt="Actor Photo" style="width:100px;height:auto;border-radius:10px" />
+                }
+                else
+                {
+                    <span>No photo available</span>
+                }
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
