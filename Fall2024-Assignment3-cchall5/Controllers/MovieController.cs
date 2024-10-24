@@ -93,7 +93,7 @@ namespace Fall2024_Assignment3_cchall5.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ImdbLink,Genre,ReleaseYear,MoviePhoto")] Movie movie)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ImdbLink,Genre,ReleaseYear,MoviePhoto")] Movie movie, IFormFile? photo)
         {
             if (id != movie.Id)
             {
@@ -104,6 +104,22 @@ namespace Fall2024_Assignment3_cchall5.Controllers
             {
                 try
                 {
+                    var existingMovie = await _context.Movie.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
+
+                    if (existingMovie == null)
+                    {
+                        return NotFound();
+                    }
+                    if (photo != null && photo.Length > 0)
+                    {
+                        using var memoryStream = new MemoryStream();
+                        await photo.CopyToAsync(memoryStream);
+                        movie.MoviePhoto = memoryStream.ToArray();
+                    }
+                    else
+                    {
+                        movie.MoviePhoto = existingMovie.MoviePhoto;
+                    }
                     _context.Update(movie);
                     await _context.SaveChangesAsync();
                 }
