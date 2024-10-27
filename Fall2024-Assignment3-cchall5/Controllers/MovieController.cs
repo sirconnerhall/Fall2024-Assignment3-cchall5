@@ -7,16 +7,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Fall2024_Assignment3_cchall5.Data;
 using Fall2024_Assignment3_cchall5.Models;
+using Azure.AI.OpenAI;
+using VaderSharp2;
 
 namespace Fall2024_Assignment3_cchall5.Controllers
 {
     public class MovieController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly OpenAI.Chat.ChatClient _client;
 
-        public MovieController(ApplicationDbContext context)
+        public MovieController(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
+            var apiKey = configuration["OpenAI:Secret"];
+            var apiEndpoint = configuration["OpenAI:Endpoint"];
+            AzureOpenAIClient chat = new(new Uri(apiEndpoint), new System.ClientModel.ApiKeyCredential(apiKey));
+            _client = chat.GetChatClient("gpt-35-turbo");
         }
 
         // GET: Movie
@@ -40,7 +47,38 @@ namespace Fall2024_Assignment3_cchall5.Controllers
                 return NotFound();
             }
 
-            return View(movie);
+            // generate tweets about actor
+            var comments = new List<String>();
+            try
+            {
+                var movieName = movie.Title;
+                var completion = await _client.CompleteChatAsync($"Generate ten reviews about the movie {movieName}. They should be of different styles." +
+                    $"All of them should be between 200-500 characters each. Separate each review with the '|' character. All of them should be passionate. " +
+                    $"End the final review normally, not with the '|'. Ensure there is a fair mix of positive, negative, and neutral reviews.");
+                var resultText = completion.Value.Content[0].Text;
+                comments = resultText.Split('|').Select(tweet => tweet.Trim()).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+            // sentiment analysis
+            var analyzer = new SentimentIntensityAnalyzer();
+            var commentSentiments = comments.Select(comment => new CommentSentiment
+            {
+                Comment = comment,
+                Sentiment = analyzer.PolarityScores(comment).Compound
+            }).ToList();
+
+            // make view model
+            var viewModel = new MovieViewModel
+            {
+                Movie = movie,
+                ReviewsWithSentiments = commentSentiments
+            };
+
+            return View(viewModel);
         }
 
         // GET: Movie/Create
