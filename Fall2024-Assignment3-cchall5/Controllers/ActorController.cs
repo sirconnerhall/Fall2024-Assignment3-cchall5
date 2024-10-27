@@ -73,12 +73,20 @@ namespace Fall2024_Assignment3_cchall5.Controllers
                 Sentiment = analyzer.PolarityScores(comment).Compound
             }).ToList();
 
+            // determine movies for this actor
+            var movies = await _context.MovieActor
+                .Include(ma => ma.Movie)
+                .Where(ma => ma.ActorId == actor.Id)
+                .Select(ma => ma.Movie)
+                .ToListAsync();
+
             // make view model
             var viewModel = new ActorViewModel
             {
                 Actor = actor,
                 TweetsWithSentiments = commentSentiments,
-                OverallSentiment = overallSentiment
+                OverallSentiment = overallSentiment,
+                Movies = movies
             };
 
             return View(viewModel);

@@ -71,6 +71,37 @@
     </tbody>
 </table>
 
+
+<h5>Actors Appearing In</h5>
+@if (Model.Actors != null && Model.Actors.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Actor Name</th>
+                <th>IMDb Link</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Actors)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ImdbLink)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No movies found in database.</p>
+}
+
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Movie.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
