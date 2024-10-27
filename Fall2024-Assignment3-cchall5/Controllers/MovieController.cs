@@ -49,14 +49,14 @@ namespace Fall2024_Assignment3_cchall5.Controllers
 
             // generate tweets about actor
             var comments = new List<String>();
+            string resultText = "";
             try
             {
                 var movieName = movie.Title;
                 var completion = await _client.CompleteChatAsync($"Generate ten reviews about the movie {movieName}. They should be of different styles." +
                     $"All of them should be between 200-500 characters each. Separate each review with the '|' character. All of them should be passionate. " +
                     $"End the final review normally, not with the '|'. Ensure there is a fair mix of positive, negative, and neutral reviews.");
-                var resultText = completion.Value.Content[0].Text;
-                comments = resultText.Split('|').Select(tweet => tweet.Trim()).ToList();
+                resultText = completion.Value.Content[0].Text;
             }
             catch (Exception ex)
             {
@@ -65,6 +65,8 @@ namespace Fall2024_Assignment3_cchall5.Controllers
 
             // sentiment analysis
             var analyzer = new SentimentIntensityAnalyzer();
+            double overallSentiment = analyzer.PolarityScores(resultText).Compound;
+            comments = resultText.Split('|').Select(review => review.Trim()).ToList();
             var commentSentiments = comments.Select(comment => new CommentSentiment
             {
                 Comment = comment,
@@ -75,7 +77,8 @@ namespace Fall2024_Assignment3_cchall5.Controllers
             var viewModel = new MovieViewModel
             {
                 Movie = movie,
-                ReviewsWithSentiments = commentSentiments
+                ReviewsWithSentiments = commentSentiments,
+                OverallSentiment = overallSentiment
             };
 
             return View(viewModel);

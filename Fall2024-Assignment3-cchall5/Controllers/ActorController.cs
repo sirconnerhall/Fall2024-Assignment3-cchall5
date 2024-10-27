@@ -49,14 +49,14 @@ namespace Fall2024_Assignment3_cchall5.Controllers
 
             // generate tweets about actor
             var comments = new List<String>();
+            string resultText = "";
             try
             {
                 var actorName = actor.Name;
                 var completion = await _client.CompleteChatAsync($"Generate twenty tweets about the actor {actorName}. They should be of different styles." +
                     $"All of them should be less than 140 characters each. Separate each tweet with the '|' character. All of them should be passionate. " +
                     $"End the final tweet normally, not with the '|'. Ensure there is a fair mix of positive, negative, and neutral tweets.");
-                var resultText = completion.Value.Content[0].Text;
-                comments = resultText.Split('|').Select(tweet => tweet.Trim()).ToList();
+                resultText = completion.Value.Content[0].Text;
             }
             catch (Exception ex)
             {
@@ -65,6 +65,8 @@ namespace Fall2024_Assignment3_cchall5.Controllers
 
             // sentiment analysis
             var analyzer = new SentimentIntensityAnalyzer();
+            double overallSentiment = analyzer.PolarityScores(resultText).Compound;
+            comments = resultText.Split('|').Select(tweet => tweet.Trim()).ToList();
             var commentSentiments = comments.Select(comment => new CommentSentiment
             {
                 Comment = comment,
@@ -75,7 +77,8 @@ namespace Fall2024_Assignment3_cchall5.Controllers
             var viewModel = new ActorViewModel
             {
                 Actor = actor,
-                TweetsWithSentiments = commentSentiments
+                TweetsWithSentiments = commentSentiments,
+                OverallSentiment = overallSentiment
             };
 
             return View(viewModel);
